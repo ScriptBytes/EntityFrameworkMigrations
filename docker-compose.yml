@@ -1,0 +1,25 @@
+services:
+  migrationsdb:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=LikeAndSubscribe
+    ports:
+      - "5432:5432"
+    volumes:
+      - migrationsdata:/var/lib/postgresql/data
+  efmigrations:
+    build: .
+    ports:
+      - "5001:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Compose
+    depends_on:
+      - migrationsdb
+volumes:
+  migrationsdata:
+    external: true
+
+
+# docker run --name migrationsdb -e POSTGRES_PASSWORD=LikeAndSubscribe -p 5432:5432 -v migrationsdata:/var/lib/postgresql/data -d postgres
+# docker build -t efmigrations .
+# docker run -p 5001:80 -d --name efmigrations efmigrations
